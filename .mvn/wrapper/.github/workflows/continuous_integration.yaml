@@ -1,5 +1,4 @@
 name: Push Continuous Integration
-
 on:
 #   especificando para rodar o workflow quando for realizado um pull request no repositório
     push:
@@ -18,6 +17,4 @@ jobs:
               java-version: '21'
 #   Realiza os testes unitários no arquivo principal do código
         -   name: Unit Tests
-            run: |
-                cd greenway-main
-                mvn clean verify
+            run: mvn test
