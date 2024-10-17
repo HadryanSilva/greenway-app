@@ -1,3 +1,4 @@
+name: Push Continuous Delivery
 on:
   push:
     branches: "master"
