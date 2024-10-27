@@ -23,4 +23,11 @@ public class GlobalErrorHandlingAdvice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<DefaultErrorMessage> handleUserAlreadyExistsException(ResponseStatusException ex) {
+        var errorResponse = new DefaultErrorMessage(HttpStatus.BAD_REQUEST.value(), ex.getReason());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
 }

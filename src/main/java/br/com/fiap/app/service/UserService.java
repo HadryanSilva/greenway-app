@@ -1,6 +1,7 @@
 package br.com.fiap.app.service;
 
 import br.com.fiap.app.exception.NotFoundException;
+import br.com.fiap.app.exception.UserAlreadyExistsException;
 import br.com.fiap.app.exception.UserUnauthorizedException;
 import br.com.fiap.app.mapper.UserMapper;
 import br.com.fiap.app.model.User;
@@ -40,6 +41,9 @@ public class UserService {
     public User save(UserPostRequest request) {
         var user = userMapper.postToUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new UserAlreadyExistsException("Username already exists");
+        }
         log.info("Saving user: {}", user.getUsername());
         return userRepository.save(user);
     }

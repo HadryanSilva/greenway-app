@@ -26,7 +26,7 @@ public class CustomUserDetailService implements UserDetailsService {
                     .roles(getRoles(userObject))
                     .build();
         } else {
-            throw new UsernameNotFoundException("username not found");
+            throw new UsernameNotFoundException("username not found " + username);
         }
     }
 

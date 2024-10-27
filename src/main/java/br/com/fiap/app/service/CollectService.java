@@ -27,6 +27,8 @@ public class CollectService {
 
     private final CollectMapper collectMapper;
 
+    private final EmailService emailService;
+
     public Collect save(CollectPostRequest collect) {
         var collectConverted = collectMapper.postToCollect(collect);
         var user = userRepository.findById(collect.getUserId())
@@ -34,15 +36,17 @@ public class CollectService {
         collectConverted.setUser(user);
         collectConverted.setCollectionDate(LocalDate.now().plusDays(3));
         log.info("Saving collect");
-        return collectRepository.save(collectConverted);
+        var collectSaved = collectRepository.save(collectConverted);
+        emailService.sendEmailNotificationCollectCreated(collectMapper.toPostResponse(collectSaved));
+        return collectSaved;
     }
 
-    public Collect delete(Long id) {
+    public void delete(Long id) {
         var collect = collectRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Collect not found"));
         log.info("Deleting collect");
         collectRepository.deleteById(id);
-        return collect;
+        emailService.sendEmailNotificationCollectDeleted(collect);
     }
 
     public void update(CollectPutRequest collect) {
@@ -50,6 +54,7 @@ public class CollectService {
                 .orElseThrow(() -> new NotFoundException("Collect not found"));
         collectToUpdate.setWasteType(WasteType.valueOf(collect.getWasteType()));
         collectRepository.save(collectToUpdate);
+        emailService.sendEmailNotificationCollectUpdated(collect.getId());
     }
 
     public List<CollectGetResponse> listCollects(Long userId) {

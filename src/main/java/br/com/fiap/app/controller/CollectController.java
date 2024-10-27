@@ -6,7 +6,6 @@ import br.com.fiap.app.request.CollectPutRequest;
 import br.com.fiap.app.response.CollectGetResponse;
 import br.com.fiap.app.response.CollectPostResponse;
 import br.com.fiap.app.service.CollectService;
-import br.com.fiap.app.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +20,6 @@ public class CollectController {
 
     private final CollectService collectService;
 
-    private final EmailService emailService;
-
     private final CollectMapper collectMapper;
 
     @GetMapping("/{userId}")
@@ -34,21 +31,18 @@ public class CollectController {
     public ResponseEntity<CollectPostResponse> save(@RequestBody CollectPostRequest request) {
         var collectSaved = collectService.save(request);
         var response = collectMapper.toPostResponse(collectSaved);
-        emailService.sendEmailNotificationCollectCreated(response);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        var collect = collectService.delete(id);
-        emailService.sendEmailNotificationCollectDeleted(collect);
+        collectService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping
     public ResponseEntity<String> update(@RequestBody CollectPutRequest request) {
         collectService.update(request);
-        emailService.sendEmailNotificationCollectUpdated(request.getId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .body("Collect updated successfully");
     }
