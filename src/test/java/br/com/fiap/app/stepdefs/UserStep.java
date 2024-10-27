@@ -11,7 +11,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.spring.CucumberContextConfiguration;
 import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -48,7 +47,6 @@ public class UserStep extends StepDefsDefault {
         user.setEmail("admin@admin.com");
         user.setRole("ADMIN");
         userRepository.save(user);
-
     }
 
     @And("que eu tenha feito login com o usuario admin")
@@ -84,7 +82,7 @@ public class UserStep extends StepDefsDefault {
         response = restTemplate.postForEntity(BASE_URL, entity, UserGetResponse.class);
     }
 
-    @Then("o status de resposta deve ser {int}")
+    @Then("o status de resposta da requisição de cadastro de usuário deve ser {int}")
     public void o_status_de_resposta_deve_ser(Integer statusCode) {
         assertThat(response.getStatusCode().value()).isEqualTo(statusCode);
     }

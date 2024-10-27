@@ -31,7 +31,7 @@ public class CollectController {
     public ResponseEntity<CollectPostResponse> save(@RequestBody CollectPostRequest request) {
         var collectSaved = collectService.save(request);
         var response = collectMapper.toPostResponse(collectSaved);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/{id}")
