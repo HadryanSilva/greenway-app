@@ -22,5 +22,5 @@
 
 - Para Executar os Testes é necessário apenas acessar a pasta raiz do projeto e executar o comando abaixo:
     ```bash
-    mvn clean verify
+    mvn clean test
     ```
